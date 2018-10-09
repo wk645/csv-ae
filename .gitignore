@@ -1,0 +1,18 @@
+# Operating system
+.DS_Store
+
+# Editor
+.idea/
+
+# Dependencies
+node_modules/
+
+# Generated project files
+coverage/
+dist/
+
+# Logs
+*.log
+
+# Environment Configuration
+.env
