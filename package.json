@@ -1,0 +1,40 @@
+{
+  "name": "boilerplate_back_end_web",
+  "version": "1.0.0",
+  "description": "boilerplate_back_end_web",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "compile": "babel server --out-dir dist --delete-dir-on-start --source-maps inline --copy-files",
+    "dev": "nodemon server --exec babel-node --config .nodemonrc.json",
+    "dev:debug": "nodemon server --exec babel-node --config .nodemonrc.json --inspect",
+    "lint": "eslint -c .eslintrc.json {server,test}/**",
+    "lint:fix": "eslint --fix -c .eslintrc.json {server,test}/**"
+  },
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "dotenv": "6.0.0",
+    "express": "4.16.3",
+    "pino": "5.7.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.1.2",
+    "@babel/core": "7.1.2",
+    "@babel/node": "7.0.0",
+    "@babel/preset-env": "7.1.0",
+    "babel-eslint": "10.0.1",
+    "eslint": "5.6.1",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "2.14.0",
+    "nodemon": "1.18.4"
+  },
+  "author": "Shauki Villar",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/convene_dev/boilerplate_back_end_web/src/master/"
+  },
+  "license": "ISC"
+}
