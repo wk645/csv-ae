@@ -25,7 +25,7 @@ COPY . /boilerplate-back-end-web
 EXPOSE 8080
 
 # Set Environment variables
-ENV  NODE_ENV production
+ENV  NODE_ENV=production
 
 # Transpile assets using babel 
 # This is a multi stage build, this explains the npm run and the CMD after

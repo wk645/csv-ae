@@ -56,6 +56,33 @@ npm run lint
 npm run lint:fix
 ```
 
+### Side notes regarding certain security aspects that should be delegated to a reverse proxy
+
+### The following security best practices should be enforced at the reverse proxy level (Nginx for example)
+
+```sh
+# Disabling the X-Powered-By header, should be handled by a reverse proxy
+# For example, if using nginx, edit the configuration file at /etc/nginx/nginx.conf
+# comment out the line: more_clear_headers 'X-Powered-By' 
+```
+
+```sh
+# Enforce TLS/SSL
+```
+
+```sh
+# Add CORS configuration with support for pre-flighted requests
+# Also with regards to Access-Control-Allow-Origin: instead of a wide open wild card consider listing out specific domains
+```
+
+```sh
+# Add gzip compression, check out the following nginx module: ngx_http_gzip_module  
+```
+
+```sh
+# Handling of static content
+```
+
 ## Building your Docker Image
 
 ```sh
