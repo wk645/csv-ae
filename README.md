@@ -185,3 +185,56 @@ docker container ls
 docker container ls --all
 docker container ls -aq
 ```
+
+### Sequelize
+
+```sh
+# The .sequelizerc file tells the sequelize-cli where to create migrations, seeders, models and the project config
+# Oncd that file is created,run:
+sequelize init
+
+# That command will create `config/config.json`, `models/index.js`, `migrations` and `seeders` directories and files. 
+# Next, open and edit `config/config.json` then update the database connection details
+# This assumes you have postgres installed locally with a database named: boilerplate_back_end_web
+# Login to your local postgres instance using pgadmin 4 or the psql service via your terminal using:
+# psql postgres --u postgres
+
+# create a new role in psql:
+CREATE ROLE convene_db_user WITH LOGIN PASSWORD 'convene_db_password';
+
+# grant the create db permission to the role
+ALTER ROLE convene_db_user CREATEDB;
+
+# create the database
+CREATE DATABASE boilerplate_back_end_web;
+
+# grant our user the proper permissions to the db
+GRANT ALL PRIVILEGES ON DATABASE boilerplate_back_end_web TO convene_db_user;
+
+# To generate new model, using, for example, the Property entity from Elevate v1, using the sequelize cli
+sequelize model:create --name Property --attributes name:string,city:string,address:string,email:string,phone:string
+
+# Next, we need at least another model to establish a relationship/association
+# properties have tenant companies, let's create another model
+sequelize model:create --name Tenant --attributes company_name:string,business_type:string,address:string,contact_phone:string,email:string
+
+# Once the models are created, edit the files to include associations
+# Example association from the property model:
+ Property.associate = function (models) {
+        models.Property.hasMany(models.Tenant);
+    };
+
+# Another association from the tenant model:
+Tenant.associate = function (models) {
+        models.Tenant.belongsTo(models.Property);
+        models.Tenant.hasMany(models.User);
+    };
+
+# Next, have the sequelize cli run a db migration to generate the tables and relationships in the database
+# Run:
+sequelize db:migrate
+
+# Start creating controllers, routes, services and of course data access operations to support at least Add, Update, Delete, GetAll and GetById
+
+#For more information, read the sequelize docs: http://docs.sequelizejs.com/
+```

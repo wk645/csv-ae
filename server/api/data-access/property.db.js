@@ -10,7 +10,6 @@ class PropertyDb {
     }
 
     addProperty(name, city, address, email, phone) {
-        console.log(name);
         return models.Property.create({
             name,
             city,
