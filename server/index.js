@@ -1,5 +1,5 @@
 import './common/env';
-import Server from './common/server';
+import Server from './server';
 import routes from './routes';
 
 export default new Server()

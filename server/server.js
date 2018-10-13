@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
-import PinoLogger from './logger';
+import PinoLogger from './common/logger';
 
 const app = new Express();
 
