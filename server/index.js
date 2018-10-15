@@ -1,7 +1,7 @@
 import './common/env';
-import Server from './common/server';
+import Server from './server';
 import routes from './routes';
 
 export default new Server()
-  .router(routes)
-  .listen(process.env.PORT);
+    .router(routes)
+    .listen(process.env.PORT);

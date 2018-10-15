@@ -1,9 +1,9 @@
-import db from '../database/health.db';
+import db from '../data-access/health.db';
 
 class HealthService {
-  healthCheck() {
-    return db.healthStatus();
-  }
+    healthCheck() {
+        return db.healthStatus();
+    }
 }
 
 export default new HealthService();
