@@ -1,4 +1,4 @@
-import db from '../../database/health/health.db';
+import db from '../data-access/health.db';
 
 class HealthService {
     healthCheck() {

@@ -1,4 +1,4 @@
-class HealthDatabase {
+class HealthStatusDb {
     constructor() {
         this._data = [{ Status: 'Ok' }];
     }
@@ -8,4 +8,4 @@ class HealthDatabase {
     }
 }
 
-export default new HealthDatabase();
+export default new HealthStatusDb();

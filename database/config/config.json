@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "convene_db_user",
+    "password": "convene_db_password",
+    "database": "boilerplate_back_end_web",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "convene_db_user",
+    "password": "postgrconvene_db_passwordes",
+    "database": "boilerplate_back_end_web",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "convene_db_user",
+    "password": "convene_db_password",
+    "database": "boilerplate_back_end_web",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

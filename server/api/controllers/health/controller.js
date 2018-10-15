@@ -1,4 +1,4 @@
-import HealthService from '../../services/health/health.service';
+import HealthService from '../../services/health.service';
 
 export class Controller {
     healthCheck(req, res) {
