@@ -1,5 +1,3 @@
-
-
 module.exports = (sequelize, DataTypes) => {
     const Property = sequelize.define('Property', {
         name: DataTypes.STRING,
