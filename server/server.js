@@ -14,6 +14,7 @@ export default class ExpressServer {
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(Express.static(`${root}/public`));
+        app.disable('x-powered-by');
     }
 
     router(routes) {
