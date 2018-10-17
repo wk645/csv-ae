@@ -103,13 +103,13 @@ docker images
 # To run the image
 # Running your image with -d runs the container in detached mode, leaving the container running in the background. 
 # The -p flag redirects a public port to a private port inside the container, the -d flag runs the container in detached mode.
-docker run -p 8080:8080 -d <your username>/boilerplate-back-end-web
+docker run -p 8080:8081 -d <your username>/boilerplate-back-end-web
 # or run the following command to run it in attached mode:
-docker run --rm -it -p 8080:8080 <your username>/boilerplate-back-end-web
+docker run --rm -it -p 8080:8081 <your username>/boilerplate-back-end-web
 
 # You can also use the --init flag to wrap your Node.js process with a 
 # lightweight init system, which will respond to Kernel Signals like SIGTERM (CTRL-C) etc. For example, you can do:
-docker run --rm -it --init -p 8080:8080 -v $(pwd):/app \ <your username>/boilerplate-back-end-web bash
+docker run --rm -it --init -p 8080:8081 -v $(pwd):/app \ <your username>/boilerplate-back-end-web bash
 ```
 
 ```sh
