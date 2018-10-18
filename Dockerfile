@@ -22,7 +22,7 @@ RUN npm install
 COPY . /boilerplate-back-end-web
 
 # Expose and bind a port to make the app available
-EXPOSE 8080
+EXPOSE 8081
 
 # Set Environment variables
 ENV  NODE_ENV=production
