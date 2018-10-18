@@ -8,6 +8,9 @@
     "arrow-parens": ["error", "as-needed", {
       "requireForBlockBody": false
     }],
+    "no-var": ["error"],
+    "prefer-const": ["error"],
+    "func-names":"off",
     "class-methods-use-this": ["off"],
     "comma-dangle": ["error", "never"],
     "indent": ["error", 4, {
