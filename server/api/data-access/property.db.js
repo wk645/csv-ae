@@ -22,12 +22,14 @@ class PropertyDb {
     updateProperty(id, name, city, address, email, phone) {
         return models.Property.update({
             name,
-            city
+            city,
+            address,
+            email,
+            phone
         }, {
-            where: {
-                id
-            }
-        });
+            where: { id },
+            returning: true
+        }).then(result => result[1] && result[1][0]);
     }
 
     deleteProperty(id) {

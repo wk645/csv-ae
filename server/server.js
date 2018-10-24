@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
+import cors from 'cors';
 import PinoLogger from './common/logger';
 
 const app = new Express();
@@ -14,6 +15,7 @@ export default class ExpressServer {
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(Express.static(`${root}/public`));
+        app.use(cors());
         app.disable('x-powered-by');
     }
 
