@@ -1,0 +1,117 @@
+swagger: "2.0"
+info:
+  description: "This is a NodeJs Express based boilerplate to be used as the starting point when building new Apis."
+  version: "1.0.0"
+  title: "Convene - NodeJs Express Api - Boilerplate Back-End Web"
+  contact:
+    email: "svillar@convene.com"
+host: "localhost:8081"
+basePath: "/api/v1/docs"
+tags:
+- name: "property"
+  description: "Operations related to Property"
+schemes:
+- "https"
+- "http"
+paths:
+  /property:
+    post:
+      tags:
+      - "property"
+      summary: "Add a new property"
+      description: "Can only be performed by a logged in user"
+      operationId: "addProperty"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Property object that needs to be created"
+        required: true
+        schema:
+          $ref: "#/definitions/Property"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - property_auth:
+        - "write:property"
+        - "read:property"
+    put:
+      tags:
+      - "property"
+      summary: "Update an existing property"
+      description: ""
+      operationId: "updateProperty"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Property object that needs to be updated"
+        required: true
+        schema:
+          $ref: "#/definitions/Property"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Property not found"
+        405:
+          description: "Validation exception"
+      security:
+      - property_auth:
+        - "write:property"
+        - "read:property"
+securityDefinitions:
+  property_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:property: "modify properties in your account"
+      read:property: "read your properties"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Property:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+        example: "101G"
+      city:
+        type: "string"
+        example: "New York"
+      address:
+        type: "string"
+        example: "101 Greenwich st"
+      email:
+        type: "string"
+        example: "svillar@convene.com"
+      phone:
+        type: "string"
+        example: "(888) 730-7307"
+    xml:
+      name: "Property"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
