@@ -238,3 +238,20 @@ sequelize db:migrate
 
 #For more information, read the sequelize docs: http://docs.sequelizejs.com/
 ```
+### Swagger
+
+```sh
+# The Swagger docs are available at: /api/v1/docs
+
+# To update the swagger document and add/remove/change routes, just update the api.yaml file, located under:
+# /server/api/controllers/swagger/api.yaml
+
+# To serve up the swagger documentation with a test UI we are using the npm package; swagger-ui-express
+# and also yamljs to convert from yaml to json
+
+# why a yaml file and not json?  to make it easier to manually edit the file.
+
+# last but not least, rely on the swagger editor to edit the swagger document: https://editor.swagger.io/
+# by manually creating our own seagger file, as opposed to auto generating it, we get more control over both the
+# swagger document and get to control our express routes and folder structure.
+# for more information, check out the official swagger documentation: https://swagger.io/docs/specification/about/
