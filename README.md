@@ -252,7 +252,7 @@ sequelize db:migrate
 # why a yaml file and not json?  to make it easier to manually edit the file.
 
 # last but not least, rely on the swagger editor to edit the swagger document: https://editor.swagger.io/
-# by manually creating our own seagger file, as opposed to auto generating it, we get more control over both the
+# by manually creating our own swagger file, as opposed to auto generating it, we get more control over both the
 # swagger document and get to control our express routes and folder structure.
 # for more information, check out the official swagger documentation: https://swagger.io/docs/specification/about/
 ```
