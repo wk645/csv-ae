@@ -10,10 +10,41 @@ basePath: "/api/v1/docs"
 tags:
 - name: "property"
   description: "Operations related to Property"
+- name: "properties"
+  description: "One operation, retrieve all properties - undsecured / deprecated"
+- name: "home"
+  description: "Home controller / root path"
 schemes:
 - "https"
 - "http"
 paths:
+  /properties:
+    get:
+      tags:
+      - "properties"
+      summary: "Gets a list of all the properties"
+      description: "No need to be logged in"
+      operationId: "getAllUnsecuredProperties"
+      produces:
+      - "text/html"
+      responses:
+        200:
+          description: "Status Ok"
+          schema:
+           $ref: "#/definitions/Property"
+      deprecated: true
+  /home:
+    get:
+      tags:
+      - "home"
+      summary: "Api entry point/root path"
+      description: "No need to be logged in"
+      operationId: "getWelcomeMessage"
+      produces:
+      - "text/html"
+      responses:
+        200:
+          description: "Status Ok"
   /property:
     post:
       tags:
@@ -27,14 +58,97 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "body"
+        name: ""
         description: "Property object that needs to be created"
         required: true
         schema:
           $ref: "#/definitions/Property"
       responses:
-        405:
-          description: "Invalid input"
+        200:
+          description: "Property added successfully"
+          schema:
+           $ref: "#/definitions/Property"
+        400:
+          description: "Invalid input / Bad request"
+      security:
+      - property_auth:
+        - "write:property"
+        - "read:property"
+    get:
+      tags:
+      - "property"
+      summary: "Gets a list of properties"
+      description: "Can only be performed by a logged in user"
+      operationId: "getAllProperties"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Status ok"
+          schema:
+            $ref: "#/definitions/Property"
+        400:
+          description: "Invalid input / Bad request"
+      security:
+      - property_auth:
+        - "write:property"
+        - "read:property"
+  /property/{id}:
+    delete:
+      tags:
+      - "property"
+      summary: "Delete a property by ID"
+      description: "For valid response try integer IDs with positive integer value.                  Negative or non-integer values will generate API errors"
+      operationId: "deletePropertyById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the property that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1
+        format: "int64"
+      responses:
+        200:
+          description: "Operation completed successfully"
+        400:
+          description: "Invalid input / Bad request"
+        404:
+          description: "Property not found"
+      security:
+      - property_auth:
+        - "write:property"
+        - "read:property"
+    get:
+      tags:
+      - "property"
+      summary: "Gets a specific property by providing it's id"
+      description: "Can only be performed by a logged in user"
+      operationId: "getPropertyById"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: "id"
+        schema:
+          type: integer
+        description: "Id of the property that needs to be retrieved."
+        required: true
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            $ref: "#/definitions/Property"
+        400:
+          description: "Invalid input - Bad request"
+        404:
+          description: "Property not found, invalid input"
       security:
       - property_auth:
         - "write:property"
@@ -42,27 +156,27 @@ paths:
     put:
       tags:
       - "property"
-      summary: "Update an existing property"
-      description: ""
-      operationId: "updateProperty"
+      summary: "Updates a property record given a valid property id"
+      description: "Can only be performed by a logged in user"
+      operationId: "updatePropertyById"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Property object that needs to be updated"
-        required: true
+      - in: path
+        name: "id"
         schema:
-          $ref: "#/definitions/Property"
+          type: integer
+        description: "Property id that needs to be updated"
+        required: true
       responses:
+        200:
+          description: "Property updated successfully"
+          schema:
+            $ref: "#/definitions/Property"
         400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Property not found"
-        405:
-          description: "Validation exception"
+          description: "Invalid input - Bad request"
       security:
       - property_auth:
         - "write:property"
@@ -74,7 +188,7 @@ securityDefinitions:
     flow: "implicit"
     scopes:
       write:property: "modify properties in your account"
-      read:property: "read your properties"
+      read:property: "read properties in your account"
   api_key:
     type: "apiKey"
     name: "api_key"
@@ -85,6 +199,9 @@ definitions:
     required:
     - "name"
     properties:
+      id:
+        type: "integer"
+        example: 5
       name:
         type: "string"
         example: "101G"
@@ -105,12 +222,12 @@ definitions:
   ApiResponse:
     type: "object"
     properties:
-      code:
+      httpStatusCode:
         type: "integer"
         format: "int32"
-      type:
-        type: "string"
       message:
+        type: "string"
+      errorMessage:
         type: "string"
 externalDocs:
   description: "Find out more about Swagger"
