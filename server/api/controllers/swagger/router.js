@@ -1,10 +1,11 @@
 import express from 'express';
 import * as swaggerUi from 'swagger-ui-express';
-import * as yaml from 'js-yaml';
-import fs from 'fs';
+import * as yaml from 'yamljs';
+import path from 'path';
 
-const swaggerDocument = yaml.safeLoad(fs.readFileSync('./swagger.yml', 'utf8'));
+const swaggerDocument = yaml.load(path.join(__dirname, '/api.yaml'));
 
 export default express
     .Router()
-    .get('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    .use('/', swaggerUi.serve)
+    .get('/', swaggerUi.setup(swaggerDocument));
