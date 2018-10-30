@@ -255,3 +255,4 @@ sequelize db:migrate
 # by manually creating our own seagger file, as opposed to auto generating it, we get more control over both the
 # swagger document and get to control our express routes and folder structure.
 # for more information, check out the official swagger documentation: https://swagger.io/docs/specification/about/
+```
