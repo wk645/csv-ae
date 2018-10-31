@@ -1,8 +1,47 @@
 # Back End Boilerplate
 
-A back end boilerplate for stardandizing development of new Node, Express based rest api projects.
+A back end boilerplate for stardandizing development of new NodeJs, Express based Rest Api projects.
 
-Uses: [Express] (https://www.npmjs.com/package/express)
+Uses:
+[Express](https://www.npmjs.com/package/express)
+
+[Sequelize](https://sequelize.readthedocs.io/en/v3/)
+
+[Swagger](https://swagger.io/)
+
+[EsLint](https://eslint.org/)
+
+[Babel](https://babeljs.io/)
+
+## Table of Contents
+
+* [Goals](#markdown-header-goals)
+* [Technologies](#markdown-header-technologies)
+* [Setup](#markdown-header-setup)
+* [Commands](#markdown-header-commands)
+    * [Development](#markdown-header-development)
+    * [Linting](#markdown-header-linting)
+    * [Docker](#markdown-header-docker)
+    * [Sequelize](#markdown-header-sequelize)
+    * [Swagger](#markdown-header-swagger)
+* [Source Code Organization](#markdown-header-source-code-organization)
+
+## Goals
+
+The goal of this boilerplate is to establish **a standard project structure with robust tools and technologies to use when starting to work on a new Rest Api project.**, rather
+than having to figure out what tools to use and how to structure your code, this should be your starting reference architecture.
+
+## Technologies
+
+The project is built primarily around [Express](https://www.npmjs.com/package/express)
+
+Uses [Babel](https://babeljs.io/) to transpile to future JavaScript syntax.
+
+JavaScript linting is accomplished via [ESLint](https://eslint.org/).
+
+The Api endpoints are documented via [Swagger](https://swagger.io/).
+
+[Docker](https://www.docker.com/) is used for deployment.
 
 ## Setup
 
@@ -18,8 +57,8 @@ npm install
 ### Development
 
 ```sh
-# Start Webpack development server
-npm start
+# Start the Nodejs server using Nodemon
+npm run dev
 ```
 
 ### Build - Other than dev
@@ -44,7 +83,7 @@ npm run dev
 npm run dev:debug
 ```
 
-### Linting support
+### Linting
 
 ```sh
 # To run eslint
@@ -56,135 +95,22 @@ npm run lint
 npm run lint:fix
 ```
 
-### Side notes regarding certain security aspects that should be delegated to a reverse proxy
+### Docker
 
-### The following security best practices should be enforced at the reverse proxy level (Nginx for example)
-
-```sh
-# Disabling the X-Powered-By header, should be handled by a reverse proxy
-# For example, if using nginx, edit the configuration file at /etc/nginx/nginx.conf
-# comment out the line: more_clear_headers 'X-Powered-By' 
-```
+There are several Bash scripts to help interact with Docker.
 
 ```sh
-# Enforce TLS/SSL
+# Build Docker image
+bash ./devops/build_me.sh [tag]
+
+# Run Docker image
+bash ./devops/run_me.sh [tag]
+
+# Push Docker image to registry
+bash ./devops/push_me.sh [tag]
 ```
 
-```sh
-# Add CORS configuration with support for pre-flighted requests
-# Also with regards to Access-Control-Allow-Origin: instead of a wide open wild card consider listing out specific domains
-```
-
-```sh
-# Add gzip compression, check out the following nginx module: ngx_http_gzip_module  
-```
-
-```sh
-# Handling of static content
-```
-
-## Building your Docker Image
-
-```sh
-# From the directory where the Dockerfile is located:
-# To build a Docker Image run [replace the app_name with your own if not using the boilerplate]
-# The -t flag lets you tag your image so it's easier to find later using the docker images comman
-docker build -t <your username>/boilerplate-back-end-web .
-```
-
-```sh
-# To verify that your image is listed by Docker, run:
-docker images
-```
-
-## Running your Docker Image
-
-```sh
-# To run the image
-# Running your image with -d runs the container in detached mode, leaving the container running in the background. 
-# The -p flag redirects a public port to a private port inside the container, the -d flag runs the container in detached mode.
-docker run -p 8080:8081 -d <your username>/boilerplate-back-end-web
-# or run the following command to run it in attached mode:
-docker run --rm -it -p 8080:8081 <your username>/boilerplate-back-end-web
-
-# You can also use the --init flag to wrap your Node.js process with a 
-# lightweight init system, which will respond to Kernel Signals like SIGTERM (CTRL-C) etc. For example, you can do:
-docker run --rm -it --init -p 8080:8081 -v $(pwd):/app \ <your username>/boilerplate-back-end-web bash
-```
-
-```sh
-# If you want to get container ID, list the containers that are running, run:
-docker container ls 
-
-# the following command will list the docker images: 
-docker images list
-
-# top stop a running container use: 
-docker stop {container-id}
-
-# To Print app output, it should display: Running on http://localhost:8080 - run:
-docker logs <container id>
-```
-
-```sh
-# If you need to go inside the container you can use the exec command:
-docker exec -it <container id> /bin/bash
-```
-
-```sh
-# To test your app/api, use Curl or Postman to make a request to the port that you mapped the container to in your machine
-# For example:
-curl -i localhost:5000
-```
-
-## Tagging your Docker Image
-
-```sh
-# Docker will assign a default tag of latest after running docker build
-# To avoid the problems around latest, be explicit with your build tags
-docker tag boilerplate-back-end-web:latest convene/boilerplate-back-end-web:$SHA1  
-docker tag boilerplate-back-end-web:latest convene/boilerplate-back-end-web:$BRANCH_NAME  
-docker tag boilerplate-back-end-web:latest convene/build_$BUILD_NUM 
-docker tag image username/repository:tag
-```
-
-## Publish your image
-
-```sh
-# Once complete, if you log into the docker hub you should see your image listed there
-docker push username/repository:tag
-```
-
-## Pull and run the image from the remote repository
-
-```sh
-# From now on, you can use docker run and run your app on any machine with this command:
-docker run -p 4000:80 username/repository:tag
-```
-
-### Docker cheat sheet
-
-```sh
-# List Docker CLI commands
-docker
-docker container --help
-
-# Display Docker version and info
-docker --version
-docker version
-docker info
-
-# Execute Docker image
-docker run hello-world
-
-# List Docker images
-docker image ls
-
-# List Docker containers (running, all, all in quiet mode)
-docker container ls
-docker container ls --all
-docker container ls -aq
-```
+All of these Bash scripts use the `convenedev` user. They use the directory name as the image name. The optional `[tag]` argument defaults to `latest`; it will confirm with the user before using the default.
 
 ### Sequelize
 
@@ -238,6 +164,7 @@ sequelize db:migrate
 
 #For more information, read the sequelize docs: http://docs.sequelizejs.com/
 ```
+
 ### Swagger
 
 ```sh
