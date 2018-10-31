@@ -4,9 +4,13 @@ A back end boilerplate for stardandizing development of new NodeJs, Express base
 
 Uses:
 [Express](https://www.npmjs.com/package/express)
+
 [Sequelize](https://sequelize.readthedocs.io/en/v3/)
+
 [Swagger](https://swagger.io/)
+
 [EsLint](https://eslint.org/)
+
 [Babel](https://babeljs.io/)
 
 ## Table of Contents
