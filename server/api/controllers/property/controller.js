@@ -1,4 +1,5 @@
 import propertyService from '../../services/property.service';
+import segmentAnalyticsHelper from '../../../common/middleware/segmentAnalyticsHelper';
 
 export class Controller {
     list(req, res) {
@@ -27,6 +28,8 @@ export class Controller {
         propertyService.addProperty(req.body.name, req.body.city, req.body.address, req.body.email, req.body.phone)
             .then(response => {
                 if (response) {
+                    segmentAnalyticsHelper.trackCustomEvent({ userId: 'anonymousId', event: 'Property Added', properties: req.body });
+
                     res.json(response);
                 }
             })
@@ -37,6 +40,8 @@ export class Controller {
         propertyService.updateProperty(req.params.id, req.body.name, req.body.city, req.body.address, req.body.email, req.body.phone)
             .then(response => {
                 if (response) {
+                    segmentAnalyticsHelper.track('Property Updated', { details: req.body });
+
                     res.json(response);
                 }
             })
@@ -47,6 +52,8 @@ export class Controller {
         propertyService.deleteProperty(req.params.id)
             .then(response => {
                 if (response) {
+                    segmentAnalyticsHelper.track('Property Deleted', { PropertyId: `${req.params.id}` });
+
                     res.json(response);
                 }
             })

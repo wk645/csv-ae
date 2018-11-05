@@ -12,7 +12,8 @@
     "lint:fix": "eslint --fix -c .eslintrc.json {server,test}/**"
   },
   "dependencies": {
-    "@okta/jwt-verifier": "0.0.12",
+    "@okta/jwt-verifier": "0.0.14",
+    "analytics-node": "3.3.0",
     "body-parser": "1.18.3",
     "cors": "2.8.4",
     "dotenv": "6.0.0",

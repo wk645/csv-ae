@@ -28,8 +28,12 @@ Uses:
 
 ## Goals
 
-The goal of this boilerplate is to establish **a standard project structure with robust tools and technologies to use when starting to work on a new Rest Api project.**, rather
-than having to figure out what tools to use and how to structure your code, this should be your starting reference architecture.
+The goal of this boilerplate is to establish **the standard project structure with robust tools and technologies to use when starting to work on a new Rest Api project.**, rather
+than having to figure out what tools to use and how to structure your code, this MUST be your starting reference architecture.
+
+## Important Note
+
+This project is open source, meaning we accept code contributions and pull requests to update and improve this nodejs api boilerplate.
 
 ## Technologies
 
