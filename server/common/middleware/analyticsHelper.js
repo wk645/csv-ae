@@ -1,6 +1,6 @@
 import Analytics from 'analytics-node';
 
-class SegmentAnalyticsHelper {
+class AnalyticsHelper {
     constructor() {
         this.analytics = new Analytics(process.env.SEGMENT_KEY);
     }
@@ -18,4 +18,4 @@ class SegmentAnalyticsHelper {
     }
 }
 
-module.exports = new SegmentAnalyticsHelper();
+module.exports = new AnalyticsHelper();
