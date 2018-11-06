@@ -6,13 +6,19 @@
 
 # Dependencies
 node_modules/
-
+npm-debug.log
 # Generated project files
 coverage/
 dist/
 
 # Logs
 *.log
+*.logs/*
+newrelic_agent.log
 
-# Environment Configuration
-# .env
+# Other
+coverage/*
+reports/*
+.vscode
+data/*
+backups/*

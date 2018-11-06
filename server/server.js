@@ -1,3 +1,5 @@
+import newrelic from 'newrelic';// eslint-disable-line no-unused-vars
+
 import Express from 'express';
 import * as path from 'path';
 import * as os from 'os';
