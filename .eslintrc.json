@@ -2,8 +2,14 @@
   "parser": "babel-eslint",
   "extends": "airbnb-base",
   "env": {
+    "es6": true,
+    "browser": false,
+    "node": true,
     "mocha": true
   },
+  "parserOptions": {
+    "sourceType": "module"
+},
   "rules": {
     "arrow-parens": ["error", "as-needed", {
       "requireForBlockBody": false
@@ -13,6 +19,7 @@
     "func-names":"off",
     "class-methods-use-this": ["off"],
     "comma-dangle": ["error", "never"],
+    "max-len": [2, 150],
     "indent": ["error", 4, {
       "SwitchCase": 1
     }],
