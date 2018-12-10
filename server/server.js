@@ -6,9 +6,10 @@ import * as os from 'os';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import cors from 'cors';
-import PinoLogger from './common/logger';
+import logger from './common/logger';
 
 const app = new Express();
+const WinstonLogger = logger.init();
 
 export default class ExpressServer {
     constructor() {
@@ -16,7 +17,6 @@ export default class ExpressServer {
         app.set('appPath', `${root}client`);
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: true }));
-        app.use(Express.static(`${root}/public`));
         app.use(cors());
         app.disable('x-powered-by');
     }
@@ -27,7 +27,7 @@ export default class ExpressServer {
     }
 
     listen(port = process.env.PORT) {
-        const welcome = p => () => PinoLogger.info(`Up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname()} on port: ${p}`);
+        const welcome = p => () => WinstonLogger.info(`Up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname()} on port: ${p}`);
         http.createServer(app).listen(port, welcome(port));
         return app;
     }

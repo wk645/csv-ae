@@ -1,8 +1,24 @@
-import pino from 'pino';
+import winston from 'winston';
+import Papertrail from 'winston-papertrail';
+import './env';
 
-const PinoLogger = pino({
-    name: process.env.APP_ID,
-    level: process.env.LOG_LEVEL
-});
+class WinstonLogger {
+    static init() {
+        const logger = winston.createLogger({
+            level: 'info',
+            format: winston.format.json(),
+            transports: [
+                new winston.transports.Console(),
+                new winston.transports.Papertrail({
+                    host: 'logs7.papertrailapp.com',
+                    port: 41376,
+                    level: 'debug'
+                })
+            ]
+        });
 
-export default PinoLogger;
+        return logger;
+    }
+}
+
+module.exports = WinstonLogger;
