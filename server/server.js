@@ -27,8 +27,17 @@ export default class ExpressServer {
     }
 
     listen(port = process.env.PORT) {
-        const welcome = p => () => WinstonLogger.info(`Up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname()} on port: ${p}`);
-        http.createServer(app).listen(port, welcome(port));
-        return app;
+        return new Promise(resolve => {
+            const server = http.createServer(app).listen(port);
+
+            server.on('listening', () => {
+                WinstonLogger.info(`Up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname()} on port: ${port}`);
+                resolve(server);
+            });
+            server.on('error', error => {
+                WinstonLogger.error(`${error}`);
+                process.exit(0);
+            });
+        });
     }
 }
