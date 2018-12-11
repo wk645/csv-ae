@@ -7,12 +7,12 @@ export default class WinstonLogger {
             level: 'info',
             format: winston.format.simple(),
             transports: [
-                new winston.transports.Console()
-                // new winston.transports.Papertrail({
-                //     host: 'logs7.papertrailapp.com',
-                //     port: 41376,
-                //     level: 'debug'
-                // })
+                new winston.transports.Console(),
+                new winston.transports.Papertrail({
+                    host: 'logs7.papertrailapp.com',
+                    port: 41376,
+                    level: 'debug'
+                })
             ]
         });
 
