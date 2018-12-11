@@ -26,18 +26,29 @@ export default class ExpressServer {
         return this;
     }
 
-    listen(port = process.env.PORT) {
+    async listen(port = process.env.PORT) {
         return new Promise(resolve => {
             const server = http.createServer(app).listen(port);
 
             server.on('listening', () => {
                 WinstonLogger.info(`Up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname()} on port: ${port}`);
                 resolve(server);
+
+                process.on('SIGINT', this.shutdown.bind(this, server));
+                process.on('SIGTERM', this.shutdown.bind(this, server));
             });
             server.on('error', error => {
                 WinstonLogger.error(`${error}`);
                 process.exit(0);
             });
+        });
+    }
+
+    shutdown(server) {
+        server.close(() => {
+            WinstonLogger.info(`Shutting down server on port: ${process.env.PORT}`);
+
+            process.exit(0);
         });
     }
 }
