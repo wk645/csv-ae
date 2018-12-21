@@ -17,16 +17,16 @@ export default class ExpressServer {
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(cors());
         app.disable('x-powered-by');
-        app.use(morgan(`:date[web] [:method] ':url' STATUS::status`));
+        app.use(morgan(':date[web] [:method] ":url" STATUS::status'));
         app.use(morgan('dev', {
-            skip: function (req, res) {
+            skip: function (req, res) { // eslint-disable-line object-shorthand
                 return res.statusCode < 400;
             },
             stream: process.stderr
         }));
 
         app.use(morgan('dev', {
-            skip: function (req, res) {
+            skip: function (req, res) { // eslint-disable-line object-shorthand
                 return res.statusCode >= 400;
             },
             stream: process.stdout
