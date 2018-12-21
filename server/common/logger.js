@@ -1,17 +1,25 @@
 import winston from 'winston';
 import Papertrail from 'winston-papertrail'; // eslint-disable-line no-unused-vars
+import config from '../../database/config/config';
 
-export default class WinstonLogger {
+class WinstonLogger {
     static init() {
         const logger = winston.createLogger({
-            level: 'info',
+            level: config.logger.level,
             format: winston.format.simple(),
             transports: [
-                new winston.transports.Console(),
+                new winston.transports.Console({
+                    level: config.logger.level,
+                    timestamp: true,
+                    inlineMeta: true,
+                    colorize: true,
+                }),
                 new winston.transports.Papertrail({
-                    host: 'logs7.papertrailapp.com',
-                    port: 41376,
-                    level: 'debug'
+                    level: config.logger.level,
+                    host: config.logger.host,
+                    port: config.logger.port,
+                    inlineMeta: true,
+                    timestamp: true
                 })
             ]
         });
@@ -19,3 +27,7 @@ export default class WinstonLogger {
         return logger;
     }
 }
+
+const logger = WinstonLogger.init();
+
+export default logger;

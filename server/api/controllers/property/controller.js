@@ -1,8 +1,6 @@
 import propertyService from '../../services/property.service';
 import analyticsHelper from '../../../common/middleware/analyticsHelper';
-import logger from '../../../common/logger';
-
-const WinstonLogger = logger.init();
+import WinstonLogger from '../../../common/logger';
 
 export class Controller {
     list(req, res) {

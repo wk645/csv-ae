@@ -1,24 +1,34 @@
 import newrelic from 'newrelic';// eslint-disable-line no-unused-vars
 
 import Express from 'express';
-import * as path from 'path';
 import * as os from 'os';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import cors from 'cors';
-import logger from './common/logger';
+import WinstonLogger from './common/logger';
+import morgan from 'morgan';
 
 const app = new Express();
-const WinstonLogger = logger.init();
 
 export default class ExpressServer {
     constructor() {
-        const root = path.normalize(`${__dirname}/../..`);
-        app.set('appPath', `${root}client`);
+        app.set('appPath', `${global}client`);
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(cors());
         app.disable('x-powered-by');
+        app.use(morgan(`:date[web] [:method] ":url" STATUS::status`));
+        app.use(morgan('dev', {
+            skip: function (req, res) {
+                return res.statusCode < 400
+            }, stream: process.stderr
+        }));
+
+        app.use(morgan('dev', {
+            skip: function (req, res) {
+                return res.statusCode >= 400
+            }, stream: process.stdout
+        }));
     }
 
     router(routes) {
@@ -26,7 +36,7 @@ export default class ExpressServer {
         return this;
     }
 
-    async listen(port = process.env.PORT) {
+    listen(port = process.env.PORT) {
         return new Promise(resolve => {
             const server = http.createServer(app).listen(port);
 
