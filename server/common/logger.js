@@ -12,7 +12,7 @@ class WinstonLogger {
                     level: config.logger.level,
                     timestamp: true,
                     inlineMeta: true,
-                    colorize: true,
+                    colorize: true
                 }),
                 new winston.transports.Papertrail({
                     level: config.logger.level,

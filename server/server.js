@@ -5,8 +5,8 @@ import * as os from 'os';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import cors from 'cors';
-import WinstonLogger from './common/logger';
 import morgan from 'morgan';
+import WinstonLogger from './common/logger';
 
 const app = new Express();
 
@@ -17,17 +17,19 @@ export default class ExpressServer {
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(cors());
         app.disable('x-powered-by');
-        app.use(morgan(`:date[web] [:method] ":url" STATUS::status`));
+        app.use(morgan(`:date[web] [:method] ':url' STATUS::status`));
         app.use(morgan('dev', {
             skip: function (req, res) {
-                return res.statusCode < 400
-            }, stream: process.stderr
+                return res.statusCode < 400;
+            },
+            stream: process.stderr
         }));
 
         app.use(morgan('dev', {
             skip: function (req, res) {
-                return res.statusCode >= 400
-            }, stream: process.stdout
+                return res.statusCode >= 400;
+            },
+            stream: process.stdout
         }));
     }
 
