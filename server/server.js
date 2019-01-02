@@ -46,21 +46,15 @@ export default class ExpressServer {
                 WinstonLogger.info(`Up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname()} on port: ${port}`);
                 resolve(server);
 
-                process.on('SIGINT', this.shutdown.bind(this, server));
-                process.on('SIGTERM', this.shutdown.bind(this, server));
+                ['SIGINT', 'SIGTERM'].forEach(signal => process.on(signal, () => {
+                    WinstonLogger.info(`Shutting down server on port: ${process.env.PORT}`);
+                    process.exit(0);
+                }));
             });
             server.on('error', error => {
                 WinstonLogger.error(`${error}`);
                 process.exit(0);
             });
-        });
-    }
-
-    shutdown(server) {
-        server.close(() => {
-            WinstonLogger.info(`Shutting down server on port: ${process.env.PORT}`);
-
-            process.exit(0);
         });
     }
 }
