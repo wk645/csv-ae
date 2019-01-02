@@ -7,9 +7,9 @@ import swaggerRouter from './api/controllers/swagger/router';
 
 export default function routes(app) {
     app.use('/', homeRouter);
-    app.use('/api/v1/healthcheck', healthRouter);
-    app.use('/api/v1/property', OktaAuthorizationHelper.hasPermissions(process.env.PROPERTY_SCOPE), propertyRouter);
+    app.use('/api/service-boilerplate-back-end-web/v1/healthcheck', healthRouter);
+    app.use('/api/service-boilerplate-back-end-web/v1/property', OktaAuthorizationHelper.hasPermissions(process.env.PROPERTY_SCOPE), propertyRouter);
 
-    app.use('/api/v1/docs', swaggerRouter);
+    app.use('/api/service-boilerplate-back-end-web/v1/docs', swaggerRouter);
     app.use(notFoundRouter);
 }

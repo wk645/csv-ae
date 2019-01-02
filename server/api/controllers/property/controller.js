@@ -1,11 +1,13 @@
 import propertyService from '../../services/property.service';
 import analyticsHelper from '../../../common/middleware/analyticsHelper';
+import WinstonLogger from '../../../common/logger';
 
 export class Controller {
     list(req, res) {
         propertyService.getAllProperties()
             .then(response => {
                 if (response) {
+                    WinstonLogger.info(response);
                     res.json(response);
                 }
             })
@@ -16,6 +18,7 @@ export class Controller {
         propertyService.getPropertyById(req.params.id)
             .then(response => {
                 if (response) {
+                    WinstonLogger.info(response);
                     res.json(response);
                 } else {
                     res.json([]);
@@ -30,6 +33,7 @@ export class Controller {
                 if (response) {
                     analyticsHelper.trackCustomEvent({ userId: 'anonymousId', event: 'Property Added', properties: req.body });
 
+                    WinstonLogger.info(response);
                     res.json(response);
                 }
             })
@@ -42,6 +46,7 @@ export class Controller {
                 if (response) {
                     analyticsHelper.track('Property Updated', { details: req.body });
 
+                    WinstonLogger.info(response);
                     res.json(response);
                 }
             })
@@ -54,6 +59,7 @@ export class Controller {
                 if (response) {
                     analyticsHelper.track('Property Deleted', { PropertyId: `${req.params.id}` });
 
+                    WinstonLogger.info(response);
                     res.json(response);
                 }
             })
