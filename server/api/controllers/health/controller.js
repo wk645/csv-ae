@@ -5,8 +5,7 @@ export class Controller {
     healthCheck(req, res) {
         HealthService.healthCheck().then(response => {
             if (response) {
-                const stringifiedResponse = JSON.stringify(response);
-                WinstonLogger.info(JSON.parse(stringifiedResponse)[0]);
+                WinstonLogger.info(JSON.stringify(response));
                 res.json(response);
             } else {
                 res.status(404).end();
