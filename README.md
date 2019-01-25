@@ -187,3 +187,18 @@ sequelize db:migrate
 # swagger document and get to control our express routes and folder structure.
 # for more information, check out the official swagger documentation: https://swagger.io/docs/specification/about/
 ```
+
+### Testing
+```sh
+# List of tools used for unit testing are: mocha, chai, sinon, nyc (istanbul), and supertest
+
+# Mocha - the test runner
+
+# Chai - an assertion library
+
+# Sinon - Mocks, spies, and stubs
+
+# Nyc - test coverage monitor
+
+# Supertest - the HTTP assertion library (endpoints/routes/CRUD, etc.)
+```
