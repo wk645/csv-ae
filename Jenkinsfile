@@ -1,7 +1,7 @@
 #!groovy
 
 pipeline {
-    agent { label '///???///' }
+    agent { label '' }
     environment {
         NODE_ENV = "development"
     }
@@ -92,7 +92,7 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
+                    withCredentials([ [ $class: '',
                                      credentialsId: '',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
@@ -113,7 +113,7 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
+                    withCredentials([ [ $class: '',
                                      credentialsId: '',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
@@ -134,7 +134,7 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
+                    withCredentials([ [ $class: '',
                                      credentialsId: '',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
@@ -155,12 +155,12 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([ [ $class: 'AmazonWebServicesCredentialsBinding',
+                    withCredentials([ [ $class: '',
                                      credentialsId: '']] ) {
 
                        docker.withRegistry('', '') {
                        
-                       sh 'aws ecs update-service --cluster "nodejs-back-end-apis" --service "" --force-new-deployment'
+                       sh 'aws ecs update-service --cluster "" --service "" --force-new-deployment'
                        }
                     }
                 }
