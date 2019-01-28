@@ -1,99 +1,88 @@
 #!groovy
 
 pipeline {
-    agent any
+    agent { label '///???///' }
     environment {
-        NODE_ENV = "dev"
-        OAUTH_CLIENTID = "wave2dashboard"
-        OAUTH_CLIENTSECRET = "y5uvBfCSgxL4jk48cDycnYbKUfX7H5DatVjkTAGgstEuPsSwpEPD47DLu6GLBZVj"
+        NODE_ENV = "development"
     }
     stages {
         stage('Notify') {
             steps {
-                slackSend channel: "#builds", message: "Build STARTED: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}", color: "warning"
+                slackSend color: "warning", channel: "#backend-boilerplate-builds", message: "Build STARTED: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
                 bitbucketStatusNotify(buildState: "INPROGRESS")
             }
         }
         stage('Setup') {
             steps {
-                echo '*** Installing NodeJS ***'
-                sh 'apt-get -y update'
-                sh 'apt-get -y install curl'
-                sh 'curl -sL https://deb.nodesource.com/setup_6.x | bash -'
-                sh 'apt-get -y update'
-                sh 'apt-get -y install build-essential nodejs'
+                sh 'echo *** Initial Setup ***'
+                sh 'sudo yum -y install curl'
+                sh 'echo *** Curl Version ***'
+                sh 'curl --version'
+                sh 'echo *** Installing NodeJS ***'
+                sh 'curl -sL https://deb.nodesource.com/setup_11.x | sudo bash -'
+                sh 'sudo yum -y install nodejs'
                 sh 'npm --version'
-                echo '*** Installing JS Dependencies ***'
-                sh 'npm install --quiet --no-progress'
-                sh 'npm install eslint -g'
+                sh 'node --version'
+                sh 'echo *** Installing Centos Dev Tools ***'
+                sh 'sudo yum -y install gcc gcc-c++ make'
+                sh 'echo *** Installing JS Dependencies ***'
+                sh 'sudo npm install --quiet --no-progress'
+                sh 'sudo npm install eslint -g'
+                sh 'ls'
+                sh 'echo *** Removing Node Modules ***'
+                sh 'sudo rm -rf node_modules'
+                sh 'echo *** Additional Setup/Installation ***'
+                sh 'sudo npm install -g npm'
             }
         }
         stage('Build feature/*') {
             when {
                 branch 'feature/*'
             }
-            environment {
-                API_HOST = "https://www.b5e.biz"
-            }
             steps {
-                sh 'node --version'
-                sh 'npm run build'
+                sh 'npm install'
             }
         }
         stage('Build hotfix/*') {
             when {
                 branch 'hotfix/*'
             }
-            environment {
-                API_HOST = "https://www.b5e.biz"
-            }
             steps {
-                sh 'npm run build'
+                sh 'npm install'
             }
         }
         stage('Build develop') {
             when {
                 branch 'develop'
             }
-            environment {
-                API_HOST = "https://www.b5e.biz"
-            }
             steps {
-                sh 'npm run build'
+                sh 'npm install'
             }
         }
         stage('Build release/*') {
             when {
                 branch 'release/*'
             }
-            environment {
-                API_HOST = "https://www.b5a.biz"
-            }
             steps {
-                sh 'npm run build'
+                sh 'npm install'
             }
         }
         stage('Build master') {
             when {
                 branch 'master'
             }
-            environment {
-                API_HOST = "https://api.beco.io"
-            }
             steps {
-                sh 'npm run build'
+                sh 'npm install'
             }
         }
         stage('Code Analysis') {
             steps {
-                sh 'npm run lint:build'
-                sh 'ls -l ./reports/lint'
+                sh 'npm run lint'
             }
         }
         stage('Tests and Coverage') {
             steps {
-                sh 'npm run test:build'
-                sh 'ls -l ./reports'
+                sh 'npm run test'
             }
 
         }
@@ -104,12 +93,16 @@ pipeline {
             steps {
                 script {
                     withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
-                                     credentialsId: 'becojenkinsdeployment',
+                                     credentialsId: '',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
+
+                       docker.withRegistry('', '') {
+
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
-                       sh 'docker build -t becoinc/location_registry:latest .'
-                       sh 'docker push becoinc/location_registry:latest'
+                       sh 'docker build -t convenedev/boilerplate_back_end_web:latest -f ./Dockerfile .'
+                       sh 'docker push convenedev/boilerplate_back_end_web:latest'
+                       }
                     }
                 }
             }
@@ -121,12 +114,54 @@ pipeline {
             steps {
                 script {
                     withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
-                                     credentialsId: 'becojenkinsdeployment',
+                                     credentialsId: '',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
+
+                       docker.withRegistry('', '') {
+                       
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
-                       sh 'docker build -t becoinc/location_registry:staging .'
-                       sh 'docker push becoinc/location_registry:staging'
+                       sh 'docker build -t convenedev/boilerplate_back_end_web:staging -f ./Dockerfile .'
+                       sh 'docker push convenedev/boilerplate_back_end_web:staging'
+                       }
+                    }
+                }
+            }
+        }
+        stage('Create :hotfix Docker') {
+            when {
+                branch 'hotfix/*'
+            }
+            steps {
+                script {
+                    withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
+                                     credentialsId: '',
+                                     usernameVariable: 'USERNAME',
+                                     passwordVariable: 'PASSWORD']] ) {
+
+                       docker.withRegistry('', '') {
+                       
+                       sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
+                       sh 'docker build -t convenedev/boilerplate_back_end_web:hotfix_${env.JOB_NAME}_${env.BUILD_NUMBER} -f ./Dockerfile .'
+                       sh 'docker push convenedev/boilerplate_back_end_web:hotfix_${env.JOB_NAME}_${env.BUILD_NUMBER}'
+                       }
+                    }
+                }
+            }
+        }
+        stage('Deploy develop :latest to AWS Dev') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                script {
+                    withCredentials([ [ $class: 'AmazonWebServicesCredentialsBinding',
+                                     credentialsId: '']] ) {
+
+                       docker.withRegistry('', '') {
+                       
+                       sh 'aws ecs update-service --cluster "nodejs-back-end-apis" --service "" --force-new-deployment'
+                       }
                     }
                 }
             }
@@ -134,18 +169,48 @@ pipeline {
     }
     post {
         success {
-            slackSend channel: "#builds", message: "Build SUCCESSFUL: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}", color: "good"
+            slackSend color: '#00FF00', channel: "#backend-boilerplate-builds", message: "Build SUCCESSFUL: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
             bitbucketStatusNotify buildState: "SUCCESSFUL"
+            emailText (
+                attachLog: true,
+                mimeType: 'text/html',
+                replyTo: '${DEFAULT_REPLYTO}',
+                subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>""",
+                recipientProviders: [[$class: '']]
+            )
         }
         failure {
-            slackSend channel: "#builds", message: "Build FAILED: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}", color: "danger"
+            slackSend color: "#FF0000", channel: "#backend-boilerplate-builds", message: "Build FAILED: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
             bitbucketStatusNotify buildState: "FAILED"
-            emailext attachLog: true, body: '${DEFAULT_CONTENT}', mimeType: '\'text/html\'', recipientProviders: [[$class: 'CulpritsRecipientProvider']], replyTo: '${DEFAULT_REPLYTO}', subject: '${DEFAULT_SUBJECT}'
+            emailext (
+                attachLog: true, 
+                mimeType: 'text/html', 
+                replyTo: '${DEFAULT_REPLYTO}',
+                subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>""",
+                recipientProviders: [[$class: '']]
+            )
+            script {
+                mail to: '',
+                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
+            }
         }
         unstable {
-            slackSend channel: "#builds", message: "Build UNSTABLE: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}", color: "warning"
+            slackSend color: "#FF0000", channel: "#backend-boilerplate-builds", message: "Build UNSTABLE: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
             bitbucketStatusNotify buildState: "FAILED"
-            emailext attachLog: true, body: '${DEFAULT_CONTENT}', mimeType: '\'text/html\'', recipientProviders: [[$class: 'CulpritsRecipientProvider']], replyTo: '${DEFAULT_REPLYTO}', subject: '${DEFAULT_SUBJECT}'
+            emailext (
+                attachLog: true, 
+                mimeType: 'text/html', 
+                replyTo: '${DEFAULT_REPLYTO}',
+                subject: "UNSTABLE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """<p>UNSTABLE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>""",
+                recipientProviders: [[$class: '']]
+            )
         }
         always {
             //Unit Test
@@ -167,8 +232,6 @@ pipeline {
                 pattern: 'reports/lint/checkstyle-results.xml',
                 unstableTotalAll:'0'
             ])
-            //sh 'zip -r location-registry-${BUILD_NUMBER}.zip dist'
-            //archiveArtifacts artifacts: '${BRANCH_NAME}-${BUILD_NUMBER}.zip', fingerprint: true
         }
 
     }
