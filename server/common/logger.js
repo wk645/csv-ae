@@ -1,8 +1,33 @@
-import pino from 'pino';
+import winston from 'winston';
+import Papertrail from 'winston-papertrail'; // eslint-disable-line no-unused-vars
+import config from '../../database/config/config';
 
-const PinoLogger = pino({
-    name: process.env.APP_ID,
-    level: process.env.LOG_LEVEL
-});
+class WinstonLogger {
+    static init() {
+        const logger = winston.createLogger({
+            level: config.logger.level,
+            format: winston.format.simple(),
+            transports: [
+                new winston.transports.Console({
+                    level: config.logger.level,
+                    timestamp: true,
+                    inlineMeta: true,
+                    colorize: true
+                }),
+                new winston.transports.Papertrail({
+                    level: config.logger.level,
+                    host: config.logger.host,
+                    port: config.logger.port,
+                    inlineMeta: true,
+                    timestamp: true
+                })
+            ]
+        });
 
-export default PinoLogger;
+        return logger;
+    }
+}
+
+const logger = WinstonLogger.init();
+
+export default logger;

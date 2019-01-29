@@ -1,6 +1,6 @@
 class HealthStatusDb {
     constructor() {
-        this._data = [{ Status: 'Ok' }];
+        this._data = [{ Healthy: true }];
     }
 
     healthStatus() {

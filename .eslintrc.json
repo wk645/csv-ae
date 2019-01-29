@@ -10,6 +10,9 @@
   "parserOptions": {
     "sourceType": "module"
 },
+  "plugins": [
+    "chai-friendly"
+  ],
   "rules": {
     "arrow-parens": ["error", "as-needed", {
       "requireForBlockBody": false
@@ -27,6 +30,8 @@
     "no-use-before-define": ["error", { 
       "functions": false, 
       "classes": false 
-    }]
+    }],
+    "no-unused-expressions": 0,
+    "chai-friendly/no-unused-expressions": 2
   }
 }

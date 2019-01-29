@@ -5,25 +5,31 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "compile": "babel server --out-dir dist --delete-dir-on-start --source-maps inline --copy-files",
+    "compile": "babel server test --out-dir dist --delete-dir-on-start --source-maps inline --copy-files",
     "dev": "nodemon server --exec babel-node --config .nodemonrc.json",
     "dev:debug": "nodemon server --exec babel-node --config .nodemonrc.json --inspect",
     "lint": "eslint -c .eslintrc.json {server,test}/**",
-    "lint:fix": "eslint --fix -c .eslintrc.json {server,test}/**"
+    "lint:fix": "eslint --fix -c .eslintrc.json {server,test}/**",
+    "test": "nyc mocha --compilers js:@babel/register test/*/**/*test.js"
   },
   "dependencies": {
     "@okta/jwt-verifier": "0.0.14",
     "analytics-node": "3.3.0",
+    "apollo-server-express": "2.3.1",
     "body-parser": "1.18.3",
     "cors": "2.8.4",
     "dotenv": "6.0.0",
     "express": "4.16.3",
+    "express-graphql": "0.7.1",
+    "graphql": "14.0.2",
+    "morgan": "1.9.1",
     "newrelic": "4.10.0",
     "pg": "7.5.0",
-    "pino": "5.7.0",
     "sequelize": "4.39.0",
     "sequelize-cli": "4.1.1",
     "swagger-ui-express": "4.0.1",
+    "winston": "3.1.0",
+    "winston-papertrail": "1.0.5",
     "yamljs": "0.3.0"
   },
   "devDependencies": {
@@ -31,15 +37,22 @@
     "@babel/core": "7.1.2",
     "@babel/node": "7.0.0",
     "@babel/preset-env": "7.1.0",
+    "@babel/register": "7.0.0",
     "babel-eslint": "10.0.1",
+    "chai": "4.2.0",
     "eslint": "5.6.1",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-config-standard": "12.0.0",
+    "eslint-plugin-chai-friendly": "0.4.1",
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-node": "7.0.1",
     "eslint-plugin-promise": "4.0.1",
     "eslint-plugin-standard": "4.0.0",
-    "nodemon": "1.18.4"
+    "mocha": "5.2.0",
+    "nodemon": "1.18.8",
+    "nyc": "13.1.0",
+    "sinon": "7.2.2",
+    "supertest": "3.3.0"
   },
   "author": "Shauki Villar",
   "directories": {

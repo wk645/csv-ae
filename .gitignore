@@ -22,3 +22,5 @@ reports/*
 .vscode
 data/*
 backups/*
+package-lock.json
+.nyc_output/*

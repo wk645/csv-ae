@@ -19,5 +19,10 @@
     "database": "boilerplate_back_end_web",
     "host": "127.0.0.1",
     "dialect": "postgres"
+  },
+  "logger": {
+    "level": "debug",
+    "host": "logs7.papertrailapp.com",
+    "port": 41376
   }
 }

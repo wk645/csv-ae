@@ -45,7 +45,7 @@ paths:
       responses:
         200:
           description: "Status Ok"
-  /property:
+  /api/service-boilerplate-back-end-web/v1/property:
     post:
       tags:
       - "property"
@@ -95,7 +95,7 @@ paths:
       - property_auth:
         - "write:property"
         - "read:property"
-  /property/{id}:
+  /api/service-boilerplate-back-end-web/v1/docs/#/property/{id}:
     delete:
       tags:
       - "property"
