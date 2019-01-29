@@ -1,14 +1,14 @@
 #!groovy
 
 pipeline {
-    agent { label '' }
+    agent { label 'workplace' }
     environment {
         NODE_ENV = "development"
     }
     stages {
         stage('Notify') {
             steps {
-                slackSend color: "warning", channel: "#backend-boilerplate-builds", message: "Build STARTED: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
+                slackSend color: "warning", channel: "#ci-builds", message: "Build STARTED: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
                 bitbucketStatusNotify(buildState: "INPROGRESS")
             }
         }
@@ -30,7 +30,7 @@ pipeline {
                 sh 'sudo npm install eslint -g'
                 sh 'ls'
                 sh 'echo *** Removing Node Modules ***'
-                sh 'sudo rm -rf node_modules'
+                sh 'sudo rm -rf server/node_modules'
                 sh 'echo *** Additional Setup/Installation ***'
                 sh 'sudo npm install -g npm'
             }
@@ -46,6 +46,14 @@ pipeline {
         stage('Build hotfix/*') {
             when {
                 branch 'hotfix/*'
+            }
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Build bugfix/*') {
+            when {
+                branch 'bugfix/*'
             }
             steps {
                 sh 'npm install'
@@ -92,15 +100,16 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([ [ $class: '',
-                                     credentialsId: '',
+                    withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
+                                     credentialsId: 'directbookJenkinsDeployment',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('', '') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
 
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
-                       sh 'docker build -t convenedev/boilerplate_back_end_web:latest -f ./Dockerfile .'
+
+                       sh 'docker build -t convenedev/boilerplate_back_end_web:latest -f ./server/Dockerfile .'
                        sh 'docker push convenedev/boilerplate_back_end_web:latest'
                        }
                     }
@@ -113,16 +122,17 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([ [ $class: '',
-                                     credentialsId: '',
+                    withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
+                                     credentialsId: 'directbookJenkinsDeployment',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('', '') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
                        
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
-                       sh 'docker build -t convenedev/boilerplate_back_end_web:staging -f ./Dockerfile .'
-                       sh 'docker push convenedev/boilerplate_back_end_web:staging'
+
+                       sh 'docker build -t convenedev/boilerplate_back_end_web:release_staging -f ./server/Dockerfile .'
+                       sh 'docker push convenedev/boilerplate_back_end_web:release_staging'
                        }
                     }
                 }
@@ -134,15 +144,16 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([ [ $class: '',
-                                     credentialsId: '',
+                    withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
+                                     credentialsId: 'directbookJenkinsDeployment',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('', '') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
                        
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
-                       sh 'docker build -t convenedev/boilerplate_back_end_web:hotfix_${env.JOB_NAME}_${env.BUILD_NUMBER} -f ./Dockerfile .'
+
+                       sh 'docker build -t convenedev/boilerplate_back_end_web:hotfix_${env.JOB_NAME}_${env.BUILD_NUMBER} -f ./server/Dockerfile .'
                        sh 'docker push convenedev/boilerplate_back_end_web:hotfix_${env.JOB_NAME}_${env.BUILD_NUMBER}'
                        }
                     }
@@ -155,13 +166,10 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([ [ $class: '',
-                                     credentialsId: '']] ) {
-
-                       docker.withRegistry('', '') {
+                    withCredentials([ [ $class: 'AmazonWebServicesCredentialsBinding',
+                                     credentialsId: 'jenkins-ecs-user']] ) {
                        
-                       sh 'aws ecs update-service --cluster "" --service "" --force-new-deployment'
-                       }
+                       sh 'aws ecs update-service --cluster "nodejs-back-end-apis" --service "service-convene-booking-server" --force-new-deployment'
                     }
                 }
             }
@@ -169,7 +177,7 @@ pipeline {
     }
     post {
         success {
-            slackSend color: '#00FF00', channel: "#backend-boilerplate-builds", message: "Build SUCCESSFUL: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
+            slackSend color: '#00FF00', channel: "#ci-builds", message: "Build SUCCESSFUL: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
             bitbucketStatusNotify buildState: "SUCCESSFUL"
             emailText (
                 attachLog: true,
@@ -178,11 +186,11 @@ pipeline {
                 subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                 <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>""",
-                recipientProviders: [[$class: '']]
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
             )
         }
         failure {
-            slackSend color: "#FF0000", channel: "#backend-boilerplate-builds", message: "Build FAILED: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
+            slackSend color: "#FF0000", channel: "#ci-builds", message: "Build FAILED: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
             bitbucketStatusNotify buildState: "FAILED"
             emailext (
                 attachLog: true, 
@@ -191,16 +199,16 @@ pipeline {
                 subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                 <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>""",
-                recipientProviders: [[$class: '']]
+                recipientProviders: [[$class: 'CulpritsRecipientProvider']]
             )
             script {
-                mail to: '',
+                mail to: 'ci-builds@convene.com',
                 subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
                 body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
             }
         }
         unstable {
-            slackSend color: "#FF0000", channel: "#backend-boilerplate-builds", message: "Build UNSTABLE: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
+            slackSend color: "#FF0000", channel: "#ci-builds", message: "Build UNSTABLE: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
             bitbucketStatusNotify buildState: "FAILED"
             emailext (
                 attachLog: true, 
@@ -209,30 +217,8 @@ pipeline {
                 subject: "UNSTABLE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>UNSTABLE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
                 <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>""",
-                recipientProviders: [[$class: '']]
+                recipientProviders: [[$class: 'CulpritsRecipientProvider']]
             )
         }
-        always {
-            //Unit Test
-            junit allowEmptyResults: true, testResults: 'reports/**/jest*.xml'
-            step([
-                $class: 'CloverPublisher',
-                cloverReportDir: 'reports/coverage',
-                cloverReportFileName: 'clover.xml',
-                healthyTarget: [methodCoverage: 70, conditionalCoverage: 70, statementCoverage: 70],
-                unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
-                failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
-            ])
-            step([
-                $class: 'CheckStylePublisher',
-                canComputeNew: true,
-                canRunOnFailed: false,
-                useStableBuildAsReference: true,
-                defaultEncoding: '',
-                pattern: 'reports/lint/checkstyle-results.xml',
-                unstableTotalAll:'0'
-            ])
-        }
-
     }
 }
