@@ -1,7 +1,7 @@
 #!groovy
 
 pipeline {
-    agent { label 'workplace' }
+    agent { label 'slave-dirbook' }
     environment {
         NODE_ENV = "development"
     }
@@ -30,7 +30,11 @@ pipeline {
                 sh 'sudo npm install eslint -g'
                 sh 'ls'
                 sh 'echo *** Removing Node Modules ***'
+                sh 'sudo rm -rf node_modules'
                 sh 'sudo rm -rf server/node_modules'
+                sh 'echo *** Removing NPM Lock Files ***'
+                sh 'sudo rm -rf package-lock.json'
+                sh 'sudo rm -rf server/package-lock.json'
                 sh 'echo *** Additional Setup/Installation ***'
                 sh 'sudo npm install -g npm'
             }
@@ -101,11 +105,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
-                                     credentialsId: 'directbookJenkinsDeployment',
+                                     credentialsId: 'workplacejenkins',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'workplacejenkins') {
 
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
 
@@ -123,11 +127,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
-                                     credentialsId: 'directbookJenkinsDeployment',
+                                     credentialsId: 'workplacejenkins',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'workplacejenkins') {
                        
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
 
@@ -145,11 +149,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
-                                     credentialsId: 'directbookJenkinsDeployment',
+                                     credentialsId: 'workplacejenkins',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'workplacejenkins') {
                        
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
 
@@ -169,7 +173,7 @@ pipeline {
                     withCredentials([ [ $class: 'AmazonWebServicesCredentialsBinding',
                                      credentialsId: 'jenkins-ecs-user']] ) {
                        
-                       sh 'aws ecs update-service --cluster "nodejs-back-end-apis" --service "service-convene-booking-server" --force-new-deployment'
+                       sh 'aws ecs update-service --cluster "boilerplate-nodejs-api" --service "service-convene-booking-server" --force-new-deployment'
                     }
                 }
             }
