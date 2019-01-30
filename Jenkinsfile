@@ -105,11 +105,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
-                                     credentialsId: 'workplacejenkins',
+                                     credentialsId: 'directbookJenkinsDeployment',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('https://registry-1.docker.io/v2/', 'workplacejenkins') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
 
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
 
@@ -127,11 +127,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
-                                     credentialsId: 'workplacejenkins',
+                                     credentialsId: 'directbookJenkinsDeployment',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('https://registry-1.docker.io/v2/', 'workplacejenkins') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
                        
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
 
@@ -149,11 +149,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([ [ $class: 'UsernamePasswordMultiBinding',
-                                     credentialsId: 'workplacejenkins',
+                                     credentialsId: 'directbookJenkinsDeployment',
                                      usernameVariable: 'USERNAME',
                                      passwordVariable: 'PASSWORD']] ) {
 
-                       docker.withRegistry('https://registry-1.docker.io/v2/', 'workplacejenkins') {
+                       docker.withRegistry('https://registry-1.docker.io/v2/', 'directbookJenkinsDeployment') {
                        
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
 
@@ -173,7 +173,7 @@ pipeline {
                     withCredentials([ [ $class: 'AmazonWebServicesCredentialsBinding',
                                      credentialsId: 'jenkins-ecs-user']] ) {
                        
-                       sh 'aws ecs update-service --cluster "boilerplate-nodejs-api" --service "service-convene-booking-server" --force-new-deployment'
+                       sh 'aws ecs update-service --cluster "nodejs-back-end-apis" --service "boilerplate-nodejs-api" --force-new-deployment'
                     }
                 }
             }
