@@ -87,7 +87,7 @@ pipeline {
         }
         stage('Code Analysis') {
             steps {
-                sh 'npm run lint'
+               // sh 'npm run lint'
             }
         }
         stage('Tests and Coverage') {
