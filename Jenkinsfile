@@ -113,7 +113,7 @@ pipeline {
 
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
 
-                       sh 'docker build -t convenedev/boilerplate_back_end_web:latest -f ./server/Dockerfile .'
+                       sh 'docker build -t convenedev/boilerplate_back_end_web:latest .'
                        sh 'docker push convenedev/boilerplate_back_end_web:latest'
                        }
                     }
@@ -135,7 +135,7 @@ pipeline {
                        
                        sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
 
-                       sh 'docker build -t convenedev/boilerplate_back_end_web:release_staging -f ./server/Dockerfile .'
+                       sh 'docker build -t convenedev/boilerplate_back_end_web:release_staging .'
                        sh 'docker push convenedev/boilerplate_back_end_web:release_staging'
                        }
                     }
