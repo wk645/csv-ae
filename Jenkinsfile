@@ -88,6 +88,7 @@ pipeline {
         stage('Code Analysis') {
             steps {
                // sh 'npm run lint'
+               echo 'Skip for now'
             }
         }
         stage('Tests and Coverage') {
