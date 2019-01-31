@@ -16,10 +16,10 @@ pipeline {
             steps {
                 sh 'echo *** Initial Setup ***'
                 sh 'sudo yum -y install curl'
-                sh 'echo *** Curl Version ***'
+                sh 'echo *** Curl version ***'
                 sh 'curl --version'
-                sh 'echo *** Installing NodeJS ***'
-                sh 'curl -sL https://deb.nodesource.com/setup_11.x | sudo bash -'
+                sh 'echo *** Installing Nodejs ***'
+                sh 'curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -'
                 sh 'sudo yum -y install nodejs'
                 sh 'npm --version'
                 sh 'node --version'
@@ -31,11 +31,9 @@ pipeline {
                 sh 'ls'
                 sh 'echo *** Removing Node Modules ***'
                 sh 'sudo rm -rf node_modules'
-                sh 'sudo rm -rf server/node_modules'
-                sh 'echo *** Removing NPM Lock Files ***'
+                sh 'echo *** Removing Npm lock files ***'
                 sh 'sudo rm -rf package-lock.json'
-                sh 'sudo rm -rf server/package-lock.json'
-                sh 'echo *** Additional Setup/Installation ***'
+                sh 'echo *** Additional Setup ***'
                 sh 'sudo npm install -g npm'
             }
         }
