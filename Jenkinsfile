@@ -183,7 +183,7 @@ pipeline {
         success {
             slackSend color: '#00FF00', channel: "#ci-builds", message: "Build SUCCESSFUL: ${env.JOB_NAME}  Build #: ${env.BUILD_NUMBER}"
             bitbucketStatusNotify buildState: "SUCCESSFUL"
-            emailText (
+            emailext (
                 attachLog: true,
                 mimeType: 'text/html',
                 replyTo: '${DEFAULT_REPLYTO}',
