@@ -1,6 +1,6 @@
 # Back End Boilerplate
 
-A back end boilerplate for stardandizing development of new NodeJs, Express based Rest Api projects.
+A back end boilerplate for standardizing development of new NodeJs, Express based Rest Api projects.
 
 Uses:
 [Express](https://www.npmjs.com/package/express)
@@ -47,6 +47,8 @@ The Api endpoints are documented via [Swagger](https://swagger.io/).
 
 [Docker](https://www.docker.com/) is used for deployment.
 
+[GraphQL Playground](https://github.com/prisma/graphql-playground) is very helpful when working with GraphQL APIs.
+
 ## Setup
 
 Dependencies are managed using [NPM](https://www.npmjs.com/).
@@ -54,6 +56,35 @@ Dependencies are managed using [NPM](https://www.npmjs.com/).
 ```sh
 # Install local dependencies
 npm install
+```
+
+### First time Dev Setup
+
+This makes the assumption that you have copied this from the boilerplate and
+are going to run it with the included database models and setup. This is
+probably not what you want so have a look the [Sequelize](#markdown-header-sequelize)
+section below.
+
+If you are running this project locally for the first time you'll need to do
+some one time setup. It's assumed that you have Postgres running locally. Have
+a look at `database/config/config.json`. Change any values to something that
+makes sense. You probably at least want to change the database name.
+
+Start by running the following commands in psql. You will want to change
+convene_db_user, convene_db_password and convene_db_name to values set in
+`database/config/config.json`
+
+```sql
+CREATE ROLE convene_db_user WITH LOGIN PASSWORD 'convene_db_password';
+ALTER ROLE convene_db_user CREATEDB;
+CREATE DATABASE convene_db_name;
+GRANT ALL PRIVILEGES ON DATABASE convene_db_name TO convene_db_user;
+```
+
+Then run migrations to install the schema into the database.
+
+```bash
+sequelize db:migrate
 ```
 
 ## Commands
@@ -123,7 +154,7 @@ All of these Bash scripts use the `convenedev` user. They use the directory name
 # Oncd that file is created,run:
 sequelize init
 
-# That command will create `config/config.json`, `models/index.js`, `migrations` and `seeders` directories and files. 
+# That command will create `config/config.json`, `models/index.js`, `migrations` and `seeders` directories and files.
 # Next, open and edit `config/config.json` then update the database connection details
 # This assumes you have postgres installed locally with a database named: boilerplate_back_end_web
 # Login to your local postgres instance using pgadmin 4 or the psql service via your terminal using:
