@@ -11,26 +11,14 @@ class PropertyDb {
         return models.Property.findById(id);
     }
 
-    addProperty(name, city, address, email, phone) {
+    addProperty(property) {
         /* istanbul ignore next */
-        return models.Property.create({
-            name,
-            city,
-            address,
-            email,
-            phone
-        });
+        return models.Property.create(property);
     }
 
-    updateProperty(id, name, city, address, email, phone) {
+    updateProperty(id, property) {
         /* istanbul ignore next */
-        return models.Property.update({
-            name,
-            city,
-            address,
-            email,
-            phone
-        }, {
+        return models.Property.update(property, {
             where: { id },
             returning: true
         }).then(result => result[1] && result[1][0]);

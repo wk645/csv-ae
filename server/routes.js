@@ -11,10 +11,14 @@ import typeDefs from './api/graphql/schema';
 export default function routes(app) {
     app.use('/', homeRouter);
     app.use('/api/service-boilerplate-back-end-web/v1/healthcheck', healthRouter);
-    app.use('/api/service-boilerplate-back-end-web/v1/property', OktaAuthorizationHelper.hasPermissions(process.env.PROPERTY_SCOPE), propertyRouter);
-    app.use('/api/service-boilerplate-back-end-web/v1/property/graphql', OktaAuthorizationHelper.hasPermissions(process.env.PROPERTY_SCOPE), graphqlHTTP({
-        schema: typeDefs
-    }));
+    app.use('/api/service-boilerplate-back-end-web/v1/property',
+        OktaAuthorizationHelper.hasPermissions(process.env.PROPERTY_SCOPE),
+        propertyRouter);
+    app.use('/api/service-boilerplate-back-end-web/v1/property/graphql',
+        OktaAuthorizationHelper.hasPermissions(process.env.PROPERTY_SCOPE),
+        graphqlHTTP({
+            schema: typeDefs
+        }));
 
     app.use('/api/service-boilerplate-back-end-web/v1/docs', swaggerRouter);
     app.use(notFoundRouter);

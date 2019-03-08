@@ -7,6 +7,14 @@ export default `
         phone: String
     }
 
+    input PropertyInput {
+        name: String
+        city: String
+        address: String
+        email: String
+        phone: String
+    }
+
     type Query {
         properties: [Property]!
         property(id: ID!): Property
@@ -14,8 +22,8 @@ export default `
 
 
     type Mutation {
-        addProperty(name: String, city: String, address: String, email: String, phone: String): Property!
-        updateProperty(id: ID!, name: String, city: String, address: String, email: String, phone: String): [Property]!
+        addProperty(property: PropertyInput!): Property!
+        updateProperty(id: ID!, property: PropertyInput!): Property!
         deleteProperty(id: ID!): Property!
     }
 `;

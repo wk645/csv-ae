@@ -11,14 +11,14 @@ class Property {
         return db.getPropertyById(id);
     }
 
-    addProperty(name, city, address, email, phone) {
+    addProperty(property) {
         /* istanbul ignore next */
-        return db.addProperty(name, city, address, email, phone);
+        return db.addProperty(property);
     }
 
-    updateProperty(id, name, city, address, email, phone) {
+    updateProperty(id, property) {
         /* istanbul ignore next */
-        return db.updateProperty(id, name, city, address, email, phone);
+        return db.updateProperty(id, property);
     }
 
     deleteProperty(id) {

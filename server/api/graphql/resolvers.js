@@ -6,23 +6,11 @@ export default {
     },
     Mutation: {
         addProperty: (parent, {
-            name, city, address, email, phone
-        }, { db }, info) => db.Property.create({ // eslint-disable-line no-unused-vars
-            name,
-            city,
-            address,
-            email,
-            phone
-        }),
+            property
+        }, { db }, info) => db.Property.create(property), // eslint-disable-line no-unused-vars
         updateProperty: (parent, {
-            id, name, city, address, email, phone
-        }, { db }, info) => db.Property.update({ // eslint-disable-line no-unused-vars
-            name,
-            city,
-            address,
-            email,
-            phone
-        }, {
+            id, property
+        }, { db }, info) => db.Property.update(property, { // eslint-disable-line no-unused-vars
             where: { id },
             returning: true
         }),
