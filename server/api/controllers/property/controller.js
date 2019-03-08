@@ -28,7 +28,7 @@ export class Controller {
     }
 
     add(req, res) {
-        propertyService.addProperty(req.body.name, req.body.city, req.body.address, req.body.email, req.body.phone)
+        propertyService.addProperty(req.body)
             .then(response => {
                 if (response) {
                     analyticsHelper.trackCustomEvent({ userId: 'anonymousId', event: 'Property Added', properties: req.body });
@@ -41,7 +41,7 @@ export class Controller {
     }
 
     update(req, res) {
-        propertyService.updateProperty(req.params.id, req.body.name, req.body.city, req.body.address, req.body.email, req.body.phone)
+        propertyService.updateProperty(req.params.id, req.body)
             .then(response => {
                 if (response) {
                     analyticsHelper.track('Property Updated', { details: req.body });
