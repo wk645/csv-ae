@@ -7,7 +7,9 @@ class OktaAuthorizationHelper {
     hasPermissions(scope) {
         return async function (req, res, next) {
             try {
-                const oktaJwtVerifier = new OktaJwtVerifier({ issuer: process.env.ISSUER });
+                const oktaJwtVerifier = new OktaJwtVerifier(
+                    { issuer: process.env.ISSUER, clientId: process.env.CLIENT_ID, clientSecret: process.env.CLIENT_SECRET }
+                );
 
                 const { authorization } = req.headers;
                 if (!authorization) {
