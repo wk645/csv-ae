@@ -87,13 +87,13 @@ pipeline {
         }
         stage('Code Analysis') {
             steps {
-               // sh 'npm run lint'
+               sh 'npm run lint'
                echo 'Skip for now'
             }
         }
         stage('Tests and Coverage') {
             steps {
-                //sh 'npm run test'
+                sh 'npm run test'
                 echo 'Skip for now'
             }
 
