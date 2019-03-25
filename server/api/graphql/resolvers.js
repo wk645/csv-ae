@@ -2,7 +2,7 @@
 export default {
     Query: {
         properties: (parent, args, { db }, info) => db.Property.findAll(), // eslint-disable-line no-unused-vars
-        property: (parent, { id }, { db }, info) => db.Property.findById(id) // eslint-disable-line no-unused-vars
+        property: (parent, { id }, { db }, info) => db.Property.findByPk(id) // eslint-disable-line no-unused-vars
     },
     Mutation: {
         addProperty: (parent, {
