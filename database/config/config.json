@@ -23,6 +23,7 @@
   "logger": {
     "level": "debug",
     "host": "logs7.papertrailapp.com",
+    "hostname": "boilerplate_back_end_web",
     "port": 41376
   }
 }

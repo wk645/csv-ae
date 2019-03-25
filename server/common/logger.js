@@ -17,6 +17,7 @@ class WinstonLogger {
                 new winston.transports.Papertrail({
                     level: config.logger.level,
                     host: config.logger.host,
+                    hostname: config.logger.hostname,
                     port: config.logger.port,
                     inlineMeta: true,
                     timestamp: true
