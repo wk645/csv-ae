@@ -16,7 +16,8 @@ describe('Routes', () => {
             .get(routes.home)
             .set('Accept', 'application/json')
             .expect('Content-type', 'text/html; charset=utf-8')
-            .expect(200, done);
+            .expect(200);
+        done();
     });
 
     it('should return healthcheck route', done => {
@@ -24,7 +25,8 @@ describe('Routes', () => {
             .get(routes.healthcheck)
             .set('Accept', 'application/json')
             .expect('Content-type', 'application/json; charset=utf-8')
-            .expect(200, done);
+            .expect(200);
+        done();
     });
 
     it('should return property route', done => {
@@ -32,7 +34,8 @@ describe('Routes', () => {
             .get(routes.property)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
-            .expect(401, done);
+            .expect(401);
+        done();
     });
 
     it('should return swagger route', done => {
@@ -40,7 +43,8 @@ describe('Routes', () => {
             .get(routes.swagger)
             .set('Accept', 'application/json')
             .expect('Content-type', 'text/html; charset=UTF-8')
-            .expect(301, done);
+            .expect(301);
+        done();
     });
 
     it('should return route not found error', () => {
