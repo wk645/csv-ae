@@ -8,7 +8,7 @@ class PropertyDb {
 
     getPropertyById(id) {
         /* istanbul ignore next */
-        return models.Property.findById(id);
+        return models.Property.findByPk(id);
     }
 
     addProperty(property) {
