@@ -1,7 +1,9 @@
 import express from 'express';
+import multer from 'multer';
 import controller from './controller';
+
+const upload = multer({ dest: `${__dirname}/uploads/` });
 
 export default express
     .Router()
-    .get('/:fileId', controller.getFile)
-    .post('/', controller.parse);
+    .post('/', upload.single('aeFile'), controller.parse);

@@ -1,8 +1,9 @@
-const express = require('express');
-const http = require('http');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import express from 'express';
+import http from 'http';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 
+// eslint-disable-next-line new-cap
 const app = new express();
 const httpServer = http.createServer(app);
 
