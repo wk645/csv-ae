@@ -1,38 +1,18 @@
 {
-  "name": "boilerplate_back_end_web",
+  "name": "csv_ae",
   "version": "1.0.0",
-  "description": "boilerplate_back_end_web",
+  "description": "csv_ae",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
-    "compile": "babel server test --out-dir dist --delete-dir-on-start --source-maps inline --copy-files",
+    "compile": "babel server --out-dir dist --delete-dir-on-start --source-maps inline --copy-files",
     "dev": "nodemon server --exec babel-node --config .nodemonrc.json",
-    "dev:debug": "nodemon server --exec babel-node --config .nodemonrc.json --inspect",
-    "lint": "eslint -c .eslintrc.json {server,test}/**",
-    "lint:fix": "eslint --fix -c .eslintrc.json {server,test}/**",
-    "test": "nyc mocha --require @babel/register test/*/**/*test.js",
-    "migrate": "sequelize db:migrate",
-    "seed": "sequelize db:seed:all"
+    "lint": "eslint -c .eslintrc.json server/**"
   },
   "dependencies": {
-    "@okta/jwt-verifier": "0.0.14",
-    "analytics-node": "3.3.0",
-    "apollo-server-express": "2.4.8",
     "body-parser": "1.18.3",
     "cors": "2.8.5",
     "dotenv": "7.0.0",
-    "express": "4.16.4",
-    "express-graphql": "0.7.1",
-    "graphql": "14.1.1",
-    "morgan": "1.9.1",
-    "newrelic": "5.6.1",
-    "pg": "7.9.0",
-    "sequelize": "5.1.1",
-    "sequelize-cli": "5.4.0",
-    "swagger-ui-express": "4.0.2",
-    "winston": "3.2.1",
-    "winston-papertrail": "1.0.5",
-    "yamljs": "0.3.0"
+    "express": "4.16.4"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
@@ -41,7 +21,6 @@
     "@babel/preset-env": "7.4.2",
     "@babel/register": "7.4.0",
     "babel-eslint": "10.0.1",
-    "chai": "4.2.0",
     "eslint": "5.15.3",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-config-standard": "12.0.0",
@@ -50,19 +29,14 @@
     "eslint-plugin-node": "8.0.1",
     "eslint-plugin-promise": "4.0.1",
     "eslint-plugin-standard": "4.0.0",
-    "mocha": "6.0.2",
-    "nodemon": "1.18.10",
-    "nyc": "13.3.0",
-    "sinon": "7.3.0",
-    "supertest": "4.0.2"
+    "nodemon": "1.18.10"
   },
-  "author": "Shauki Villar",
+  "author": "Zoey Woo Jeong Kim",
   "directories": {
     "test": "test"
   },
   "repository": {
-    "type": "git",
-    "url": "https://bitbucket.org/convene_dev/boilerplate_back_end_web/src/master/"
+    "type": "git"
   },
   "license": "ISC"
 }
