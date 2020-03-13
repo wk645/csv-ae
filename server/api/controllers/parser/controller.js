@@ -8,7 +8,8 @@ export class Controller {
         const results = [];
         const customSpendings = [];
         let customObject = {};
-        let AdditionalInformation;
+
+        let total = 0;
 
         await fs.createReadStream(path)
             .pipe(csv())
@@ -16,6 +17,7 @@ export class Controller {
             .on('end', () => {
                 for (const item of results) {
                     const {
+                        Reference,
                         Date,
                         Description,
                         Amount,
@@ -23,16 +25,14 @@ export class Controller {
                         'Additional Information': additionalInformation
                     } = item;
 
-                    if (additionalInformation.indexOf(':') !== -1) {
-                        // eslint-disable-next-line prefer-destructuring
-                        AdditionalInformation = additionalInformation.split(': ')[1];
-                    }
+                    total += Number(Amount);
 
                     customObject = Object.assign(customObject, {
+                        Reference,
                         Date,
                         Description,
                         Amount: `$${Amount}`,
-                        AdditionalInformation,
+                        AdditionalInformation: additionalInformation.split('Foreign Spend Amount:')[1] || additionalInformation,
                         Category
                     });
 
@@ -42,7 +42,13 @@ export class Controller {
 
                 fs.unlinkSync(req.file.path);
 
-                return res.status(200).json(customSpendings);
+                const reversedSpendings = customSpendings.reverse();
+
+                return res.status(200).json({
+                    dateRange: `${reversedSpendings[0].Date} - ${reversedSpendings[reversedSpendings.length - 1].Date}`,
+                    total: Math.floor(total),
+                    spendings: reversedSpendings
+                });
             });
     }
 
